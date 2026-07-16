@@ -54,6 +54,31 @@ merged["engagement_level"] = pd.cut(
     labels=["Low", "Medium", "High"]
 )
 
+merged.drop(
+    columns=["customer_id_new", "customer_id_legacy"],
+    inplace=True
+)
+
+print(merged.columns.tolist())
+
+merged = merged[
+    [
+        "customer_id",
+        "social_media_platform",
+        "engagement_score",
+        "purchase_interest_score",
+        "review_sentiment",
+        "transaction_id",
+        "purchase_amount",
+        "purchase_date",
+        "purchase_month",
+        "purchase_day",
+        "customer_rating",
+        "high_value_customer",
+        "engagement_level",
+        "product_category"
+    ]
+]
 
 # Save
 merged.to_csv(
