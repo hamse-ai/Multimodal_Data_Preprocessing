@@ -37,3 +37,30 @@ merged[numeric_cols] = merged[numeric_cols].fillna(
 # Fill missing categorical values
 categorical_cols = merged.select_dtypes(include=["object"]).columns
 merged[categorical_cols] = merged[categorical_cols].fillna("Unknown")
+
+# Feature Engineering
+merged["purchase_date"] = pd.to_datetime(merged["purchase_date"])
+
+merged["purchase_month"] = merged["purchase_date"].dt.month
+merged["purchase_day"] = merged["purchase_date"].dt.day
+
+merged["high_value_customer"] = (
+    merged["purchase_amount"] > 300
+).astype(int)
+
+merged["engagement_level"] = pd.cut(
+    merged["engagement_score"],
+    bins=[0, 40, 70, 100],
+    labels=["Low", "Medium", "High"]
+)
+
+
+# Save
+merged.to_csv(
+    "data/processed/merged_customer_data.csv",
+    index=False
+)
+
+print("\nSaved merged dataset.")
+print(merged.head())
+print(merged.info())
