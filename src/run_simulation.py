@@ -36,7 +36,24 @@ def get_face_embedding(image_path):
     if face is None:
         return None
     with torch.no_grad():
-        embedding = resnet(face.unsqueeze(0))
+        x = face.unsqueeze(0)
+        x = resnet.conv2d_1a(x)
+        x = resnet.conv2d_2a(x)
+        x = resnet.conv2d_2b(x)
+        x = resnet.maxpool_3a(x)
+        x = resnet.conv2d_3b(x)
+        x = resnet.conv2d_4a(x)
+        x = resnet.conv2d_4b(x)
+        x = resnet.repeat_1(x)
+        x = resnet.mixed_6a(x)
+        x = resnet.repeat_2(x)
+        x = resnet.mixed_7a(x)
+        x = resnet.repeat_3(x)
+        x = resnet.block8(x)
+        x = resnet.avgpool_1a(x)
+        x = resnet.dropout(x)
+        x = resnet.last_linear(x.view(x.shape[0], -1))
+        embedding = resnet.last_bn(x)
     return embedding.squeeze().numpy()
 
 
